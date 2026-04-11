@@ -1,0 +1,7 @@
+- Las 7 etapas de un compilador tradicional son: analizador lexico, analizador sintactico, analizador semantico, 
+optimizador de codigo fuente, generador de codigo y optimizador de codigo objetivo.
+
+
+-- El analisis lexico y el sintactico son los procesos iniciales de la traduccion
+
+
