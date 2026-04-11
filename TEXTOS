@@ -7,4 +7,8 @@ ir poblando las estructuras de datos auxiliares como la tabla de simbolos o el m
 - El analisis lexico toma siempre la entrada y trata de convertir eso a los tokens asociados, tambien se le 
 llama scanner porque se encarga de rastrear el fuente y trata de producir los tokens que puedan ser asociados a esos. 
 
+- Porque separar analisis lexico del sintactico? Simplicidad, eficiencia y portabilidad 
+En un compilador, eso simplifica bastante el proceso inicial de traduccion porque el analizador sintactico 
+se concentra mas en validar la estructura e ir produciendo un arbol sintactico. 
 
+- 
