@@ -14,4 +14,5 @@ se concentra mas en validar la estructura e ir produciendo un arbol sintactico.
 - El lexema es la unidad sintactica de menor nivel del lenguaje 
 - El token es el agrupador asociado al lexema o su categoria 
 
-
+- Cada una de las palabras que estan en la sentencia son lexemas, mientras que los tokens serian su categoria 
+ej:  lexema 2       tiene token  literal_entero 
