@@ -1,7 +1,10 @@
 - Las 7 etapas de un compilador tradicional son: analizador lexico, analizador sintactico, analizador semantico, 
 optimizador de codigo fuente, generador de codigo y optimizador de codigo objetivo.
 
+- El analisis lexico y el sintactico son las etapas iniciales del proceso de traduccion, son importantes para 
+ir poblando las estructuras de datos auxiliares como la tabla de simbolos o el manejo de errores.
 
--- El analisis lexico y el sintactico son los procesos iniciales de la traduccion
+- El analisis lexico toma siempre la entrada y trata de convertir eso a los tokens asociados, tambien se le 
+llama scanner porque se encarga de rastrear el fuente y trata de producir los tokens que puedan ser asociados a esos. 
 
 
