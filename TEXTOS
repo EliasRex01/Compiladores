@@ -11,4 +11,7 @@ llama scanner porque se encarga de rastrear el fuente y trata de producir los to
 En un compilador, eso simplifica bastante el proceso inicial de traduccion porque el analizador sintactico 
 se concentra mas en validar la estructura e ir produciendo un arbol sintactico. 
 
-- 
+- El lexema es la unidad sintactica de menor nivel del lenguaje 
+- El token es el agrupador asociado al lexema o su categoria 
+
+
