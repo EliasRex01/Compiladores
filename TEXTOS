@@ -17,4 +17,11 @@ se concentra mas en validar la estructura e ir produciendo un arbol sintactico.
 - Cada una de las palabras que estan en la sentencia son lexemas, mientras que los tokens serian su categoria 
 ej:  lexema 2       tiene token  literal_entero 
 
-- 
+- Principales tareas del analizador lexico: 
+1. omitir los espacios en blanco 
+2. eliminar comentarios 
+3. transformar el programa texto en un flujo de tokens 
+4. identificar tipos de tokens 
+5. mantener tablas de constantes y nomnbres
+6. reportar errores lexicos
+
