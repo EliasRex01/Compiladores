@@ -25,3 +25,6 @@ ej:  lexema 2       tiene token  literal_entero
 4. mantener tablas de constantes y nomnbres
 5. reportar errores lexicos
 
+- getToken es la funcion que se encarga de hacer el recorrido necesario de los caracteres 
+hasta que encuentre un espacio en blanco y ahi toma como que eso es un lexema
+
