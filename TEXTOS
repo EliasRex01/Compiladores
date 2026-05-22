@@ -1,0 +1,30 @@
+- Las 7 etapas de un compilador tradicional son: analizador lexico, analizador sintactico, analizador semantico, 
+optimizador de codigo fuente, generador de codigo y optimizador de codigo objetivo.
+
+- El analisis lexico y el sintactico son las etapas iniciales del proceso de traduccion, son importantes para 
+ir poblando las estructuras de datos auxiliares como la tabla de simbolos o el manejo de errores.
+
+- El analisis lexico toma siempre la entrada y trata de convertir eso a los tokens asociados, tambien se le 
+llama scanner porque se encarga de rastrear el fuente y trata de producir los tokens que puedan ser asociados a esos. 
+
+- Porque separar analisis lexico del sintactico? Simplicidad, eficiencia y portabilidad 
+En un compilador, eso simplifica bastante el proceso inicial de traduccion porque el analizador sintactico 
+se concentra mas en validar la estructura e ir produciendo un arbol sintactico. 
+
+- El lexema es la unidad sintactica de menor nivel del lenguaje 
+- El token es el agrupador asociado al lexema o su categoria 
+
+- Cada una de las palabras que estan en la sentencia son lexemas, mientras que los tokens serian su categoria 
+ej:  lexema 2       tiene token  literal_entero 
+
+- Principales tareas del analizador lexico: 
+0. omitir los espacios en blanco 
+1. eliminar comentarios 
+2. transformar el programa texto en un flujo de tokens 
+3. identificar tipos de tokens 
+4. mantener tablas de constantes y nomnbres
+5. reportar errores lexicos
+
+- getToken es la funcion que se encarga de hacer el recorrido necesario de los caracteres 
+hasta que encuentre un espacio en blanco y ahi toma como que eso es un lexema
+
