@@ -1,8 +1,8 @@
 import re
 from enum import Enum
 
-# TOKEN TYPES
-class TokenType(Enum):
+# TIPOS DE TOKENS
+class Tipo_Token(Enum):
     L_CORCHETE = "["
     R_CORCHETE = "]"
     L_LLAVE = "{"
@@ -16,25 +16,25 @@ class TokenType(Enum):
     PR_TRUE = "TRUE"
     PR_FALSE = "FALSE"
     PR_NULL = "NULL"
-    
+
     EOF = "EOF"
 
 
 # TOKEN
 class Token:
-    def __init__(self, type_, lexeme, line):
-        self.type = type_
-        self.lexeme = lexeme
-        self.line = line
+    def __init__(self, tipo, lexema, linea):
+        self.tipo = tipo
+        self.lexema = lexema
+        self.linea = linea
 
     def __str__(self):
-        return f"{self.type.name}('{self.lexeme}')"
+        return f"{self.tipo.name}('{self.lexema}')"
 
 
 # LEXER
 class Lexer:
 
-    token_specification = [
+    reglas_tokenizacion = [
         ('STRING', r'"[^"]*"'),
         ('NUMBER', r'\d+(\.\d+)?((e|E)(\+|-)?\d+)?'),
 
@@ -57,111 +57,111 @@ class Lexer:
         ('MISMATCH', r'.'),
     ]
 
-    def __init__(self, text):
-        self.text = text
+    def __init__(self, texto):
+        self.texto = texto
 
-    def tokenize(self):
+    def tokenizar(self):
 
         tokens = []
-        line_num = 1
+        numero_linea = 1
 
-        tok_regex = '|'.join(
+        token_regex = '|'.join(
             f'(?P<{name}>{regex})'
-            for name, regex in self.token_specification
+            for name, regex in self.reglas_tokenizacion
         )
 
-        for mo in re.finditer(tok_regex, self.text):
+        for mo in re.finditer(token_regex, self.texto):
 
-            kind = mo.lastgroup
-            value = mo.group()
+            categoria = mo.lastgroup
+            valor = mo.group()
 
-            if kind == 'NEWLINE':
-                line_num += 1
+            if categoria == 'NEWLINE':
+                numero_linea += 1
 
-            elif kind == 'SKIP':
+            elif categoria == 'SKIP':
                 continue
 
-            elif kind == 'STRING':
+            elif categoria == 'STRING':
                 tokens.append(Token(
-                    TokenType.LITERAL_CADENA,
-                    value,
-                    line_num
+                    Tipo_Token.LITERAL_CADENA,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'NUMBER':
+            elif categoria == 'NUMBER':
                 tokens.append(Token(
-                    TokenType.LITERAL_NUM,
-                    value,
-                    line_num
+                    Tipo_Token.LITERAL_NUM,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'TRUE':
+            elif categoria == 'TRUE':
                 tokens.append(Token(
-                    TokenType.PR_TRUE,
-                    value,
-                    line_num
+                    Tipo_Token.PR_TRUE,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'FALSE':
+            elif categoria == 'FALSE':
                 tokens.append(Token(
-                    TokenType.PR_FALSE,
-                    value,
-                    line_num
+                    Tipo_Token.PR_FALSE,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'NULL':
+            elif categoria == 'NULL':
                 tokens.append(Token(
-                    TokenType.PR_NULL,
-                    value,
-                    line_num
+                    Tipo_Token.PR_NULL,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'L_CORCHETE':
+            elif categoria == 'L_CORCHETE':
                 tokens.append(Token(
-                    TokenType.L_CORCHETE,
-                    value,
-                    line_num
+                    Tipo_Token.L_CORCHETE,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'R_CORCHETE':
+            elif categoria == 'R_CORCHETE':
                 tokens.append(Token(
-                    TokenType.R_CORCHETE,
-                    value,
-                    line_num
+                    Tipo_Token.R_CORCHETE,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'L_LLAVE':
+            elif categoria == 'L_LLAVE':
                 tokens.append(Token(
-                    TokenType.L_LLAVE,
-                    value,
-                    line_num
+                    Tipo_Token.L_LLAVE,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'R_LLAVE':
+            elif categoria == 'R_LLAVE':
                 tokens.append(Token(
-                    TokenType.R_LLAVE,
-                    value,
-                    line_num
+                    Tipo_Token.R_LLAVE,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'COMA':
+            elif categoria == 'COMA':
                 tokens.append(Token(
-                    TokenType.COMA,
-                    value,
-                    line_num
+                    Tipo_Token.COMA,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'DOS_PUNTOS':
+            elif categoria == 'DOS_PUNTOS':
                 tokens.append(Token(
-                    TokenType.DOS_PUNTOS,
-                    value,
-                    line_num
+                    Tipo_Token.DOS_PUNTOS,
+                    valor,
+                    numero_linea
                 ))
 
-            elif kind == 'MISMATCH':
-                print(f"ERROR LÉXICO línea {line_num}: '{value}'")
+            elif categoria == 'MISMATCH':
+                print(f"ERROR LEXICO linea {numero_linea}: '{valor}'")
 
-        tokens.append(Token(TokenType.EOF, "EOF", line_num))
+        tokens.append(Token(Tipo_Token.EOF, "EOF", numero_linea))
 
         return tokens
 
@@ -185,7 +185,7 @@ class Parser:
 
     def match(self, token_type):
 
-        if self.peek().type == token_type:
+        if self.peek().tipo == token_type:
             self.advance()
 
         else:
@@ -199,9 +199,9 @@ class Parser:
         token = self.peek()
 
         msg = (
-            f"[Línea {token.line}] "
+            f"[Línea {token.linea}] "
             f"Error sintáctico: {message}. "
-            f"Encontrado: '{token.lexeme}'"
+            f"Encontrado: '{token.lexema}'"
         )
 
         self.errors.append(msg)
@@ -210,14 +210,14 @@ class Parser:
     def panic_mode(self):
 
         sync_tokens = {
-            TokenType.COMA,
-            TokenType.R_LLAVE,
-            TokenType.R_CORCHETE
+            Tipo_Token.COMA,
+            Tipo_Token.R_LLAVE,
+            Tipo_Token.R_CORCHETE
         }
 
         while (
-                self.peek().type not in sync_tokens
-                and self.peek().type != TokenType.EOF
+                self.peek().tipo not in sync_tokens
+                and self.peek().tipo != Tipo_Token.EOF
         ):
             self.advance()
 
@@ -226,7 +226,7 @@ class Parser:
 
         self.json()
 
-        if self.peek().type != TokenType.EOF:
+        if self.peek().tipo != Tipo_Token.EOF:
             self.error("Se esperaba EOF")
 
         if not self.errors:
@@ -243,10 +243,10 @@ class Parser:
 
     def element(self):
 
-        if self.peek().type == TokenType.L_LLAVE:
+        if self.peek().tipo == Tipo_Token.L_LLAVE:
             self.object()
 
-        elif self.peek().type == TokenType.L_CORCHETE:
+        elif self.peek().tipo == Tipo_Token.L_CORCHETE:
             self.array()
 
         else:
@@ -257,53 +257,53 @@ class Parser:
 
     def object(self):
 
-        self.match(TokenType.L_LLAVE)
+        self.match(Tipo_Token.L_LLAVE)
 
-        if self.peek().type != TokenType.R_LLAVE:
+        if self.peek().tipo != Tipo_Token.R_LLAVE:
             self.attributes_list()
 
-        self.match(TokenType.R_LLAVE)
+        self.match(Tipo_Token.R_LLAVE)
 
     def attributes_list(self):
 
         self.attribute()
 
-        while self.peek().type == TokenType.COMA:
-            self.match(TokenType.COMA)
+        while self.peek().tipo == Tipo_Token.COMA:
+            self.match(Tipo_Token.COMA)
             self.attribute()
 
     def attribute(self):
 
-        self.match(TokenType.LITERAL_CADENA)
+        self.match(Tipo_Token.LITERAL_CADENA)
 
-        self.match(TokenType.DOS_PUNTOS)
+        self.match(Tipo_Token.DOS_PUNTOS)
 
         self.attribute_value()
 
     def attribute_value(self):
 
-        token = self.peek().type
+        token = self.peek().tipo
 
-        if token == TokenType.L_LLAVE:
+        if token == Tipo_Token.L_LLAVE:
             self.object()
 
-        elif token == TokenType.L_CORCHETE:
+        elif token == Tipo_Token.L_CORCHETE:
             self.array()
 
-        elif token == TokenType.LITERAL_CADENA:
-            self.match(TokenType.LITERAL_CADENA)
+        elif token == Tipo_Token.LITERAL_CADENA:
+            self.match(Tipo_Token.LITERAL_CADENA)
 
-        elif token == TokenType.LITERAL_NUM:
-            self.match(TokenType.LITERAL_NUM)
+        elif token == Tipo_Token.LITERAL_NUM:
+            self.match(Tipo_Token.LITERAL_NUM)
 
-        elif token == TokenType.PR_TRUE:
-            self.match(TokenType.PR_TRUE)
+        elif token == Tipo_Token.PR_TRUE:
+            self.match(Tipo_Token.PR_TRUE)
 
-        elif token == TokenType.PR_FALSE:
-            self.match(TokenType.PR_FALSE)
+        elif token == Tipo_Token.PR_FALSE:
+            self.match(Tipo_Token.PR_FALSE)
 
-        elif token == TokenType.PR_NULL:
-            self.match(TokenType.PR_NULL)
+        elif token == Tipo_Token.PR_NULL:
+            self.match(Tipo_Token.PR_NULL)
 
         else:
             self.error("Valor inválido")
@@ -311,19 +311,19 @@ class Parser:
 
     def array(self):
 
-        self.match(TokenType.L_CORCHETE)
+        self.match(Tipo_Token.L_CORCHETE)
 
-        if self.peek().type != TokenType.R_CORCHETE:
+        if self.peek().tipo != Tipo_Token.R_CORCHETE:
             self.element_list()
 
-        self.match(TokenType.R_CORCHETE)
+        self.match(Tipo_Token.R_CORCHETE)
 
     def element_list(self):
 
         self.element()
 
-        while self.peek().type == TokenType.COMA:
-            self.match(TokenType.COMA)
+        while self.peek().tipo == Tipo_Token.COMA:
+            self.match(Tipo_Token.COMA)
             self.element()
 
 
@@ -337,7 +337,7 @@ def main():
 
         lexer = Lexer(source)
 
-        tokens = lexer.tokenize()
+        tokens = lexer.tokenizar()
 
         parser = Parser(tokens)
 
