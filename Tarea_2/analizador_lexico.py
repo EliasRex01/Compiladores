@@ -16,7 +16,7 @@ class TokenType(Enum):
     PR_TRUE = "TRUE"
     PR_FALSE = "FALSE"
     PR_NULL = "NULL"
-
+    
     EOF = "EOF"
 
 
@@ -230,7 +230,7 @@ class Parser:
             self.error("Se esperaba EOF")
 
         if not self.errors:
-            print("JSON SINTÁCTICAMENTE CORRECTO")
+            print("JSON SINTACTICAMENTE CORRECTO")
 
         else:
             print("\nERRORES ENCONTRADOS:\n")
