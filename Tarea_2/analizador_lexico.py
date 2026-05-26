@@ -171,32 +171,32 @@ class Parser:
 
     def __init__(self, tokens):
         self.tokens = tokens
-        self.current = 0
-        self.errors = []
+        self.actual = 0
+        self.errores = []
 
     # UTILIDADES
-    def peek(self):
-        return self.tokens[self.current]
+    def mirar(self):
+        return self.tokens[self.actual]
 
-    def advance(self):
+    def avanzar(self):
 
-        if self.current < len(self.tokens) - 1:
-            self.current += 1
+        if self.actual < len(self.tokens) - 1:
+            self.actual += 1
 
-    def match(self, token_type):
+    def match(self, tipo_token):
 
-        if self.peek().tipo == token_type:
-            self.advance()
+        if self.mirar().tipo == tipo_token:
+            self.avanzar()
 
         else:
             self.error(
-                f"Se esperaba {token_type.name}"
+                f"Se esperaba {tipo_token.name}"
             )
             self.panic_mode()
 
     def error(self, message):
 
-        token = self.peek()
+        token = self.mirar()
 
         msg = (
             f"[Línea {token.linea}] "
@@ -204,38 +204,38 @@ class Parser:
             f"Encontrado: '{token.lexema}'"
         )
 
-        self.errors.append(msg)
+        self.errores.append(msg)
 
     # PANIC MODE
     def panic_mode(self):
 
-        sync_tokens = {
+        tokens_sincronizantes = {
             Tipo_Token.COMA,
             Tipo_Token.R_LLAVE,
             Tipo_Token.R_CORCHETE
         }
 
         while (
-                self.peek().tipo not in sync_tokens
-                and self.peek().tipo != Tipo_Token.EOF
+                self.mirar().tipo not in tokens_sincronizantes
+                and self.mirar().tipo != Tipo_Token.EOF
         ):
-            self.advance()
+            self.avanzar()
 
     # GRAMÁTICA
     def parse(self):
 
         self.json()
 
-        if self.peek().tipo != Tipo_Token.EOF:
+        if self.mirar().tipo != Tipo_Token.EOF:
             self.error("Se esperaba EOF")
 
-        if not self.errors:
+        if not self.errores:
             print("JSON SINTACTICAMENTE CORRECTO")
 
         else:
             print("\nERRORES ENCONTRADOS:\n")
 
-            for error in self.errors:
+            for error in self.errores:
                 print(error)
 
     def json(self):
@@ -243,10 +243,10 @@ class Parser:
 
     def element(self):
 
-        if self.peek().tipo == Tipo_Token.L_LLAVE:
+        if self.mirar().tipo == Tipo_Token.L_LLAVE:
             self.object()
 
-        elif self.peek().tipo == Tipo_Token.L_CORCHETE:
+        elif self.mirar().tipo == Tipo_Token.L_CORCHETE:
             self.array()
 
         else:
@@ -259,7 +259,7 @@ class Parser:
 
         self.match(Tipo_Token.L_LLAVE)
 
-        if self.peek().tipo != Tipo_Token.R_LLAVE:
+        if self.mirar().tipo != Tipo_Token.R_LLAVE:
             self.attributes_list()
 
         self.match(Tipo_Token.R_LLAVE)
@@ -268,7 +268,7 @@ class Parser:
 
         self.attribute()
 
-        while self.peek().tipo == Tipo_Token.COMA:
+        while self.mirar().tipo == Tipo_Token.COMA:
             self.match(Tipo_Token.COMA)
             self.attribute()
 
@@ -282,7 +282,7 @@ class Parser:
 
     def attribute_value(self):
 
-        token = self.peek().tipo
+        token = self.mirar().tipo
 
         if token == Tipo_Token.L_LLAVE:
             self.object()
@@ -313,7 +313,7 @@ class Parser:
 
         self.match(Tipo_Token.L_CORCHETE)
 
-        if self.peek().tipo != Tipo_Token.R_CORCHETE:
+        if self.mirar().tipo != Tipo_Token.R_CORCHETE:
             self.element_list()
 
         self.match(Tipo_Token.R_CORCHETE)
@@ -322,7 +322,7 @@ class Parser:
 
         self.element()
 
-        while self.peek().tipo == Tipo_Token.COMA:
+        while self.mirar().tipo == Tipo_Token.COMA:
             self.match(Tipo_Token.COMA)
             self.element()
 
