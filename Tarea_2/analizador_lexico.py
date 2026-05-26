@@ -1,5 +1,7 @@
 import re
 from enum import Enum
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
 
 # TIPOS DE TOKENS
 class Tipo_Token(Enum):
@@ -326,14 +328,38 @@ class Parser:
             self.match(Tipo_Token.COMA)
             self.element()
 
+#  ARCHIVO
+def seleccionar_archivo():
+
+    Tk().withdraw()
+
+    ruta = askopenfilename(
+        title="Seleccione un archivo JSON",
+        filetypes=[("Archivos JSON", "*.json"),
+                   ("Todos los archivos", "*.*")]
+    )
+
+    return ruta
 
 # MAIN
 def main():
 
+    ruta_archivo = seleccionar_archivo()
+
+    if not ruta_archivo:
+        print("No se selecciono ningun archivo")
+        return
+    
+    if not ruta_archivo.endswith(".json"):
+        print("Debe seleccionar un archivo JSON")
+        return
+
     try:
 
-        with open("input.json", "r", encoding="utf-8") as file:
+        with open(ruta_archivo, "r", encoding="utf-8") as file:
             source = file.read()
+
+        print(f"\nAnalizando archivo:\n{ruta_archivo}\n")
 
         lexer = Lexer(source)
 
@@ -344,8 +370,10 @@ def main():
         parser.parse()
 
     except FileNotFoundError:
-        print("No se encontro input.json")
+        print("Archivo no encontrado")
 
+    except Exception as e:
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     main()
