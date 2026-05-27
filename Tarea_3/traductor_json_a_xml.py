@@ -1,5 +1,6 @@
 from doctest import master
 import re
+import sys
 from tracemalloc import start # Tabla Oficial de Tokens
 TOKEN_REGEX = [ 
     ('L_CORCHETE', r'\['),
@@ -31,3 +32,22 @@ def lex(source_code):
 
     for match in re.finditer(master_regex, source_code):
         start, end = match.span()
+        if start > last_match_end:
+            error_text = source_code[last_match_end:start].strip()
+            if error_text: 
+                print(f"-> Error Lexico [Linea {line_num}]: Secuencia no reconocida '{error_text}'", file=sys.stderr)
+
+            token_type = match.lastgroup
+            token_value = martch.group(token_type)
+
+            if token_type == 'NEWLINE':
+                line_num += 1 
+            elif token_type == 'SKIP': 
+                pass 
+            else: 
+                tokens.append(Token(token_type, token_value, line_num))
+
+            last_match_end = end
+
+        tokens.append(Token('EOF', 'eof', line_num))
+        return tokens
