@@ -39,7 +39,7 @@ def lex(source_code):
                 print(f"-> Error Lexico [Linea {line_num}]: Secuencia no reconocida '{error_text}'", file=sys.stderr)
 
             token_type = match.lastgroup
-            token_value = martch.group(token_type)
+            token_value = match.group(token_type)
 
             if token_type == 'NEWLINE':
                 line_num += 1 
