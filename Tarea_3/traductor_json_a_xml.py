@@ -1,4 +1,5 @@
 from doctest import master
+import errno
 import re
 import sys
 import token
@@ -85,3 +86,51 @@ class JSONParser:
             self.panic_recover()
             return None 
             
+    def parse_json(self):
+        #json => element eof 
+        self.parse_element()
+        self.match('EOF')
+
+    def parse_element(self):
+        #element => object | array
+        if self.current().type == 'L_LLAVE':
+            self.parse_object()
+        elif self.current().type == 'L_CORCHETE':
+            self.parse_array()
+        else: 
+            self.error(f"Elemento estructural invalido. Debe iniciar con '{' o '}'.")
+            self.panic_recover()
+
+    def parse_array(self):
+        #array => [ element-list ] | []
+        self.match('L_CORCHETE')
+        if self.current().type == 'R_CORCHETE': 
+            self.parse_element_list()
+        self.match('R_CORCHETE')
+
+    def parse_element_list(self):
+        # element_list => element | {element}
+        self.parse_element()
+        while self.current().type == 'COMA': 
+            self.match('COMA')
+            self.parse_element()
+
+    def parse_object(self):
+        #ovject => {atribute-list} | {}
+        self.match('L_LLAVE')
+        if self.current().type != 'R_LLAVE':
+            self.parse_attributes_list()
+        self.match('R_LLAVE')
+
+    def parse_attributes_list (self):
+        # attributes-list => attribute }
+        self.parse_attribute ()
+        while self.current().type == 'COMA':
+            self.match('COMA')
+            self.parse_attribute ()
+
+    def parse_attribute(self):
+        # attribute => attribute-name : attribute-value
+        self.match('LITERAL_CADENA') # Nombre del atributo (string)
+        self.match('DOS_PUNTOS')
+        self.parse_attribute_value()
